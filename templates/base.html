@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Nota Fiscal - HelpTech Antunes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+        .cabecalho { text-align: center; border-bottom: 2px solid #2E7D32; padding-bottom: 10px; margin-bottom: 20px; }
+        .cabecalho img { width: 80px; }
+        h1 { color: #2E7D32; margin: 5px 0; }
+        .empresa, .cliente { margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f0f0f0; }
+        .total { text-align: right; font-weight: bold; }
+        .rodape { margin-top: 30px; font-size: 0.9em; text-align: center; color: #555; }
+        .garantia { margin-top: 40px; font-size: 0.85em; line-height: 1.5; color: #444; border-top: 1px dashed #aaa; padding-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="cabecalho">
+        <img src="logo-helptech.png" alt="Logo HelpTech Antunes">
+        <h1>HELPTECH ANTUNES</h1>
+        <p>CNPJ: 12.345.678/0001-99</p>
+        <p>Avenida Luís Pereira dos Santos, 556 - Jundiaí/SP</p>
+        <p>WhatsApp: (11) 95780-5217</p>
+    </div>
+
+    <div class="cliente">
+        <p><b>Nota Fiscal Nº:</b> {{ numero }}</p>
+        <p><b>Data de Emissão:</b> {{ data }}</p>
+        <p><b>Cliente:</b> {{ cliente }}</p>
+        <p><b>CPF/CNPJ:</b> {{ cpf_cnpj }}</p>
+        <p><b>Endereço:</b> {{ endereco }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Qtd</th>
+                <th>Valor Unitário (R$)</th>
+                <th>Total (R$)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ servico }}</td>
+                <td>1</td>
+                <td>{{ valor }}</td>
+                <td>{{ valor }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="total">TOTAL: R$ {{ valor }}</p>
+
+    <div class="rodape">
+        <p><b>Observações:</b> {{ observacoes }}</p>
+        <p>Documento gerado automaticamente pelo sistema HelpTech Antunes.</p>
+    </div>
+
+    <div class="garantia">
+        <h3>📜 Leis e Garantia</h3>
+        <p>1. Este documento segue as disposições do Código de Defesa do Consumidor (Lei nº 8.078/90).</p>
+        <p>2. Os serviços prestados possuem garantia de <b>90 dias</b>, conforme previsto em lei, cobrindo exclusivamente defeitos relacionados à execução do serviço.</p>
+        <p>3. A garantia será automaticamente perdida em casos de mau uso, quedas, umidade, violação do lacre ou intervenção de terceiros não autorizados.</p>
+        <p>4. Produtos substituídos ou peças aplicadas seguem a garantia fornecida pelo fabricante/distribuidor.</p>
+        <p>5. O não pagamento integral do valor desta nota fiscal poderá acarretar em suspensão da garantia.</p>
+    </div>
+</body>
+</html>
