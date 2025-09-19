@@ -34,7 +34,7 @@ def draw_header(c: canvas.Canvas):
     c.setFont("Helvetica-Bold", 16)
     c.drawString(30*mm, 280*mm, "HelpTech Antunes - Assistência Técnica")
     c.setFont("Helvetica", 10)
-    c.drawString(30*mm, 274*mm, "CNPJ: 12.345.678/0001-99")
+    c.drawString(30*mm, 274*mm, "CPF:400.187.518-73")
     c.drawString(30*mm, 268*mm, "Endereço: Av. Luís Pereira dos Santos, 556 - Jundiaí/SP")
     c.drawString(30*mm, 262*mm, "WhatsApp: (11) 95780-5217")
 
