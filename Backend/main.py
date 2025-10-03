@@ -6,8 +6,16 @@ from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from datetime import datetime
+from fastapi import FastAPI
+app = FastAPI()
+
 
 app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"message": "API HelpTech Antunes rodando com FastAPI + PDF"}
+
 
 # --- CORS ---
 app.add_middleware(
