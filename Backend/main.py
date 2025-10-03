@@ -10,7 +10,7 @@ app = FastAPI()
 # --- CORS ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ajuste para ["https://seusite.vercel.app"] depois
+    allow_origins=["*"],  # depois em produção pode restringir
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -20,31 +20,30 @@ app.add_middleware(
 def home():
     return {"message": "API HelpTech Antunes rodando no Vercel 🚀"}
 
-# Função auxiliar para gerar PDF
-def gerar_pdf(numero: str, cliente: str, servicos: list[str], valores: list[float]):
-    file_path = f"nota_{numero}.pdf"
-    c = canvas.Canvas(file_path, pagesize=A4)
-
-    c.setFont("Helvetica-Bold", 14)
-    c.drawString(100, 800, f"Nota Fiscal Nº {numero}")
-    c.setFont("Helvetica", 12)
-    c.drawString(100, 780, f"Cliente: {cliente}")
-    c.drawString(100, 760, f"Data: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
-
-    y = 730
-    total = 0
-    for serv, val in zip(servicos, valores):
-        c.drawString(100, y, f"- {serv}  R$ {val:.2f}")
-        y -= 20
-        total += val
-
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(100, y-20, f"TOTAL: R$ {total:.2f}")
-
+# ===== Função auxiliar =====
+def criar_pdf(nome_arquivo: str, escrever):
+    c = canvas.Canvas(nome_arquivo, pagesize=A4)
+    escrever(c)
     c.save()
-    return file_path
+    return nome_arquivo
 
-# Rota para gerar PDF
+# ===== ORÇAMENTO =====
+@app.get("/gerar-pdf")
+def gerar_orcamento(
+    cliente: str = "Cliente Teste",
+    servicos: list[str] = Query(["Serviço X"]),
+    valores: list[float] = Query([100.0])
+):
+    pdf = criar_pdf("orcamento.pdf", lambda c: (
+        c.setFont("Helvetica-Bold", 14),
+        c.drawString(100, 800, "Orçamento"),
+        c.setFont("Helvetica", 12),
+        c.drawString(100, 780, f"Cliente: {cliente}"),
+        [c.drawString(100, 750 - i*20, f"- {s} : R$ {v:.2f}") for i, (s,v) in enumerate(zip(servicos,valores))]
+    ))
+    return FileResponse(pdf, media_type="application/pdf", filename=pdf)
+
+# ===== NOTA FISCAL =====
 @app.get("/nota-fiscal")
 def rota_nota(
     numero: str = "0001",
@@ -52,5 +51,51 @@ def rota_nota(
     servicos: list[str] = Query(["Serviço X"]),
     valores: list[float] = Query([100.0])
 ):
-    pdf = gerar_pdf(numero, cliente, servicos, valores)
+    pdf = criar_pdf(f"nota_{numero}.pdf", lambda c: (
+        c.setFont("Helvetica-Bold", 14),
+        c.drawString(100, 800, f"Nota Fiscal Nº {numero}"),
+        c.setFont("Helvetica", 12),
+        c.drawString(100, 780, f"Cliente: {cliente}"),
+        c.drawString(100, 760, f"Data: {datetime.now().strftime('%d/%m/%Y %H:%M')}"),
+        [c.drawString(100, 730 - i*20, f"- {s} : R$ {v:.2f}") for i, (s,v) in enumerate(zip(servicos,valores))]
+    ))
+    return FileResponse(pdf, media_type="application/pdf", filename=pdf)
+
+# ===== CONTRATO =====
+@app.get("/contrato")
+def gerar_contrato(cliente: str = "Cliente Teste", descricao: str = "Serviço contratado"):
+    pdf = criar_pdf("contrato.pdf", lambda c: (
+        c.setFont("Helvetica-Bold", 14),
+        c.drawString(100, 800, "Contrato de Prestação de Serviços"),
+        c.setFont("Helvetica", 12),
+        c.drawString(100, 770, f"Cliente: {cliente}"),
+        c.drawString(100, 750, f"Descrição: {descricao}"),
+        c.drawString(100, 720, f"Data: {datetime.now().strftime('%d/%m/%Y')}")
+    ))
+    return FileResponse(pdf, media_type="application/pdf", filename=pdf)
+
+# ===== RECIBO =====
+@app.get("/recibo")
+def gerar_recibo(cliente: str = "Cliente Teste", valor: float = 100.0):
+    pdf = criar_pdf("recibo.pdf", lambda c: (
+        c.setFont("Helvetica-Bold", 14),
+        c.drawString(100, 800, "Recibo"),
+        c.setFont("Helvetica", 12),
+        c.drawString(100, 770, f"Recebemos de: {cliente}"),
+        c.drawString(100, 750, f"Valor: R$ {valor:.2f}"),
+        c.drawString(100, 730, f"Data: {datetime.now().strftime('%d/%m/%Y')}")
+    ))
+    return FileResponse(pdf, media_type="application/pdf", filename=pdf)
+
+# ===== CARTA =====
+@app.get("/carta")
+def gerar_carta(destinatario: str = "Destinatário", mensagem: str = "Mensagem padrão"):
+    pdf = criar_pdf("carta.pdf", lambda c: (
+        c.setFont("Helvetica-Bold", 14),
+        c.drawString(100, 800, "Carta"),
+        c.setFont("Helvetica", 12),
+        c.drawString(100, 770, f"Para: {destinatario}"),
+        c.drawString(100, 740, f"Mensagem: {mensagem}"),
+        c.drawString(100, 710, f"Data: {datetime.now().strftime('%d/%m/%Y')}")
+    ))
     return FileResponse(pdf, media_type="application/pdf", filename=pdf)

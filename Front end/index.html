@@ -1,68 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HelpTech Antunes – Sistema</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>HelpTech Antunes - PDFs</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    form { margin-bottom: 30px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; }
+    label { display: block; margin-top: 8px; }
+    input { padding: 6px; margin-top: 3px; width: 250px; }
+    button { margin-top: 12px; padding: 8px 16px; background: #008f39; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #006f2c; }
+    h2 { color: #008f39; }
+  </style>
 </head>
 <body>
-  <!-- Cabeçalho -->
-  <header class="bar">
-    <div class="container">
-      <h1>⚡ HelpTech Antunes</h1>
-      <p>Orçamentos & Notas Fiscais em PDF</p>
-      <div class="api-config">
-        <label for="apiUrl">API URL:</label>
-        <input id="apiUrl" value="http://127.0.0.1:8000/">
-      </div>
-    </div>
-  </header>
 
-  <!-- Conteúdo Principal -->
-  <main class="wrap container">
-    <!-- Orçamento -->
-    <section class="card">
-      <h2>📝 Orçamento</h2>
-      <form id="formOrc">
-        <div class="field">
-          <input name="cliente" placeholder="Nome do Cliente" required>
-        </div>
-        <div class="field">
-          <input name="servico" placeholder="Serviço Realizado">
-        </div>
-        <div class="field">
-          <input type="number" step="0.01" name="valor" placeholder="Valor (R$)">
-        </div>
-        <button type="submit" class="btn">Gerar Orçamento PDF</button>
-      </form>
-    </section>
+  <h1>📑 HelpTech Antunes - Geração de PDFs</h1>
 
-    <!-- Nota Fiscal -->
-    <section class="card">
-      <h2>📑 Nota Fiscal</h2>
-      <form id="formNF">
-        <div class="field">
-          <input name="cliente" placeholder="Nome do Cliente" required>
-        </div>
-        <div class="field">
-          <input name="numero" placeholder="Número da Nota" required>
-        </div>
-        <div class="field">
-          <input name="servico" placeholder="Serviço Prestado">
-        </div>
-        <div class="field">
-          <input type="number" step="0.01" name="valor" placeholder="Valor (R$)">
-        </div>
-        <button type="submit" class="btn">Gerar Nota Fiscal</button>
-      </form>
-    </section>
-  </main>
+  <!-- FORM ORÇAMENTO -->
+  <form id="formOrc">
+    <h2>Orçamento</h2>
+    <label>Cliente: <input type="text" name="cliente" required></label>
+    <label>Serviço: <input type="text" name="servicos" required></label>
+    <label>Valor: <input type="number" step="0.01" name="valores" required></label>
+    <button type="submit">Gerar Orçamento</button>
+  </form>
 
-  <!-- Rodapé -->
-  <footer class="foot">
-    <p>© 2025 HelpTech Antunes – Assistência Técnica & Serviços Gráficos</p>
-  </footer>
+  <!-- FORM NOTA FISCAL -->
+  <form id="formNF">
+    <h2>Nota Fiscal</h2>
+    <label>Número: <input type="text" name="numero" required></label>
+    <label>Cliente: <input type="text" name="cliente" required></label>
+    <label>Serviço: <input type="text" name="servico" required></label>
+    <label>Valor: <input type="number" step="0.01" name="valor" required></label>
+    <button type="submit">Gerar NF</button>
+  </form>
+
+  <!-- FORM CONTRATO -->
+  <form id="formContrato">
+    <h2>Contrato</h2>
+    <label>Cliente: <input type="text" name="cliente" required></label>
+    <label>Descrição: <input type="text" name="descricao" required></label>
+    <button type="submit">Gerar Contrato</button>
+  </form>
+
+  <!-- FORM RECIBO -->
+  <form id="formRecibo">
+    <h2>Recibo</h2>
+    <label>Cliente: <input type="text" name="cliente" required></label>
+    <label>Valor: <input type="number" step="0.01" name="valor" required></label>
+    <button type="submit">Gerar Recibo</button>
+  </form>
+
+  <!-- FORM CARTA -->
+  <form id="formCarta">
+    <h2>Carta</h2>
+    <label>Destinatário: <input type="text" name="destinatario" required></label>
+    <label>Mensagem: <input type="text" name="mensagem" required></label>
+    <button type="submit">Gerar Carta</button>
+  </form>
 
   <script src="app.js"></script>
 </body>
