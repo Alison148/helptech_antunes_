@@ -46,7 +46,8 @@ if (formNF) {
     params.set("cliente", data.get("cliente"));
     params.append("servicos", data.get("servico"));
     params.append("valores", data.get("valor"));
-    await download(`/nota-fiscal?${params}`, `nota_${data.get("numero")}.pdf`);
+    await download(`/nota-fiscal HelpTech Antunes?${params}`, `nota_${data.get("numero")}.pdf`);
+ 
   };
 }
 
