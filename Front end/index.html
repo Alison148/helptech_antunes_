@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HelpTech Antunes – Sistema</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header class="bar">
+    <div class="container">
+      <h1>⚡ HelpTech Antunes</h1>
+      <p>Orçamentos & Notas Fiscais em PDF</p>
+      <div class="api-config">
+        <label for="apiUrl">API URL:</label>
+        <input id="apiUrl" value="http://127.0.0.1:8000/">
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="wrap container">
+    <!-- Orçamento -->
+    <section class="card">
+      <h2>📝 Orçamento</h2>
+      <form id="formOrc">
+        <div class="field">
+          <input name="cliente" placeholder="Nome do Cliente" required>
+        </div>
+        <div class="field">
+          <input name="servico" placeholder="Serviço Realizado">
+        </div>
+        <div class="field">
+          <input type="number" step="0.01" name="valor" placeholder="Valor (R$)">
+        </div>
+        <button type="submit" class="btn">Gerar Orçamento PDF</button>
+      </form>
+    </section>
+
+    <!-- Nota Fiscal -->
+    <section class="card">
+      <h2>📑 Nota Fiscal</h2>
+      <form id="formNF">
+        <div class="field">
+          <input name="cliente" placeholder="Nome do Cliente" required>
+        </div>
+        <div class="field">
+          <input name="numero" placeholder="Número da Nota" required>
+        </div>
+        <div class="field">
+          <input name="servico" placeholder="Serviço Prestado">
+        </div>
+        <div class="field">
+          <input type="number" step="0.01" name="valor" placeholder="Valor (R$)">
+        </div>
+        <button type="submit" class="btn">Gerar Nota Fiscal</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="foot">
+    <p>© 2025 HelpTech Antunes – Assistência Técnica & Serviços Gráficos</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
