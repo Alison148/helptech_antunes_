@@ -10,7 +10,7 @@ app = FastAPI()
 # --- CORS ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # depois em produção pode restringir
+    allow_origins=["*"],  # Em produção, restringir para seu domínio
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -99,3 +99,16 @@ def gerar_carta(destinatario: str = "Destinatário", mensagem: str = "Mensagem p
         c.drawString(100, 710, f"Data: {datetime.now().strftime('%d/%m/%Y')}")
     ))
     return FileResponse(pdf, media_type="application/pdf", filename=pdf)
+# ===== CERTIFICADO =====
+@app.get("/certificado")    
+def gerar_certificado(nome: str = "Nome do Aluno", curso: str = "Curso Exemplo"):
+    pdf = criar_pdf("certificado.pdf", lambda c: (
+        c.setFont("Helvetica-Bold", 16),
+        c.drawString(100, 800, "Certificado de Conclusão"),
+        c.setFont("Helvetica", 12),
+        c.drawString(100, 770, f"Certificamos que {nome}"),
+        c.drawString(100, 750, f"concluiu o curso: {curso}"),
+        c.drawString(100, 720, f"Data: {datetime.now().strftime('%d/%m/%Y')}")
+    ))
+    return FileResponse(pdf, media_type="application/pdf", filename=pdf)
+
