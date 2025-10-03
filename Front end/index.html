@@ -17,24 +17,54 @@
 
   <h1>📑 HelpTech Antunes - Geração de PDFs</h1>
 
-  <!-- FORM ORÇAMENTO -->
-  <form id="formOrc">
-    <h2>Orçamento</h2>
-    <label>Cliente: <input type="text" name="cliente" required></label>
-    <label>Serviço: <input type="text" name="servicos" required></label>
-    <label>Valor: <input type="number" step="0.01" name="valores" required></label>
-    <button type="submit">Gerar Orçamento</button>
-  </form>
+  <!-- ORÇAMENTO -->
+<form id="formOrc">
+  <h2>Orçamento</h2>
+  <label>Cliente: <input type="text" name="cliente" required></label>
 
-  <!-- FORM NOTA FISCAL -->
-  <form id="formNF">
-    <h2>Nota Fiscal</h2>
-    <label>Número: <input type="text" name="numero" required></label>
-    <label>Cliente: <input type="text" name="cliente" required></label>
-    <label>Serviço: <input type="text" name="servico" required></label>
-    <label>Valor: <input type="number" step="0.01" name="valor" required></label>
-    <button type="submit">Gerar NF</button>
-  </form>
+  <div id="servicosOrc">
+    <div class="servico">
+      <label>Serviço: <input type="text" name="servicos[]" required></label>
+      <label>Valor: <input type="number" step="0.01" name="valores[]" required></label>
+    </div>
+  </div>
+
+  <button type="button" onclick="addServico('servicosOrc')">+ Adicionar Serviço</button>
+  <button type="submit">Gerar Orçamento</button>
+</form>
+
+<hr>
+
+<!-- NOTA FISCAL -->
+<form id="formNF">
+  <h2>Nota Fiscal</h2>
+  <label>Número: <input type="text" name="numero" required></label>
+  <label>Cliente: <input type="text" name="cliente" required></label>
+
+  <div id="servicosNF">
+    <div class="servico">
+      <label>Serviço: <input type="text" name="servicos[]" required></label>
+      <label>Valor: <input type="number" step="0.01" name="valores[]" required></label>
+    </div>
+  </div>
+
+  <button type="button" onclick="addServico('servicosNF')">+ Adicionar Serviço</button>
+  <button type="submit">Gerar NF</button>
+</form>
+
+<script>
+  // Função para adicionar novos campos de serviço
+  function addServico(containerId) {
+    const div = document.createElement("div");
+    div.classList.add("servico");
+    div.innerHTML = `
+      <label>Serviço: <input type="text" name="servicos[]" required></label>
+      <label>Valor: <input type="number" step="0.01" name="valores[]" required></label>
+    `;
+    document.getElementById(containerId).appendChild(div);
+  }
+</script>
+
 
   <!-- FORM CONTRATO -->
   <form id="formContrato">
