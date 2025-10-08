@@ -246,7 +246,7 @@ def draw_nota(c, numero: str, cliente: str, pares: List[tuple], data_str: Option
     y -= 9
     c.drawCentredString(largura / 2, y, "Rua Mariano Floripa Prudente 108 – Jundiaí/SP")
     y -= 9
-    c.drawCentredString(largura / 2, y, "CNPJ 00.000.000/0001-00 | (11) 95780-5217")
+    c.drawCentredString(largura / 2, y, "CPF:400.187.518/73 | (11) 95780-5217")
     y -= 9
     c.line(x_margin, y, largura - x_margin, y)
     y -= 12
