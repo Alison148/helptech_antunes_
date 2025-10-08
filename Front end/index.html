@@ -60,21 +60,225 @@
     <button type="submit">Gerar Carta</button>
   </form>
 
-  <!-- FORM CERTIFICADO -->
-  <form id="formCertificado">
-    <h2>Certificado</h2>
-    <label>Nome do Participante: <input type="text" name="nome" required></label>
-    <label>Curso/Evento: <input type="text" name="curso" required></label>
-    <label>Data de Conclusão: <input type="date" name="data" required></label>
-    <button type="submit">Gerar Certificado</button>
+ <!-- ====== CERTIFICADO – CARD ====== -->
+<section class="card card-cert">
+  <header class="card__header">
+    <div class="card__title">
+      <h2>🏅 Gerar Certificado</h2>
+      <p>Preencha os dados do participante e do evento/curso.</p>
+    </div>
+  </header>
+
+  <form id="formCertificado" class="form-grid">
+    <!-- Participante -->
+    <div class="form-group col-2">
+      <label for="nome">Nome do Participante <span>*</span></label>
+      <input id="nome" name="nome" type="text" required placeholder="Ex.: Alison Antunes" maxlength="120">
+      <small class="hint">Nome completo para impressão.</small>
+    </div>
+
+    <!-- Curso / Evento -->
+    <div class="form-group col-2">
+      <label for="curso">Curso/Evento <span>*</span></label>
+      <input id="curso" name="curso" type="text" required placeholder="Ex.: Angular Avançado" maxlength="120">
+    </div>
+
+    <!-- Carga horária -->
+    <div class="form-group">
+      <label for="carga">Carga Horária (h)</label>
+      <input id="carga" name="carga" type="number" min="1" step="1" placeholder="Ex.: 20">
+    </div>
+
+    <!-- Período -->
+    <div class="form-group">
+      <label>Período</label>
+      <div class="inline">
+        <input id="dataInicio" name="data_inicio" type="date">
+        <span class="sep">—</span>
+        <input id="dataFim" name="data_fim" type="date">
+      </div>
+      <small class="hint">Preencha início e fim, ou use apenas “Data de Conclusão”.</small>
+    </div>
+
+    <!-- Data de Conclusão -->
+    <div class="form-group">
+      <label for="dataConclusao">Data de Conclusão</label>
+      <input id="dataConclusao" name="data_conclusao" type="date">
+    </div>
+
+    <!-- Instrutor -->
+    <div class="form-group">
+      <label for="instrutor">Instrutor(a) / Responsável</label>
+      <input id="instrutor" name="instrutor" type="text" placeholder="Ex.: João Silva">
+    </div>
+
+    <!-- Local -->
+    <div class="form-group">
+      <label for="local">Local</label>
+      <input id="local" name="local" type="text" placeholder="Ex.: Jundiaí – SP">
+    </div>
+
+    <!-- Assinatura (texto) -->
+    <div class="form-group col-2">
+      <label for="assinatura">Linha de Assinatura</label>
+      <input id="assinatura" name="assinatura" type="text" placeholder="HelpTech Antunes • CNPJ 00.000.000/0001-00">
+      <small class="hint">Rodapé do certificado (empresa, CNPJ, etc.).</small>
+    </div>
+
+    <!-- Template / Tema -->
+    <div class="form-group">
+      <label for="template">Modelo</label>
+      <select id="template" name="template">
+        <option value="classico">Clássico</option>
+        <option value="moderno">Moderno</option>
+        <option value="minimalista">Minimalista</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="corTema">Cor do Tema</label>
+      <input id="corTema" name="cor_tema" type="color" value="#2e7d32">
+    </div>
+
+    <!-- QR + Observações -->
+    <div class="form-group">
+      <label class="checkbox">
+        <input id="incluirQr" name="incluir_qr" type="checkbox" checked>
+        Incluir QR de verificação
+      </label>
+    </div>
+
+    <div class="form-group col-2">
+      <label for="observacoes">Observações</label>
+      <textarea id="observacoes" name="observacoes" rows="3" placeholder="Ex.: Certificado válido para comprovação de horas complementares."></textarea>
+    </div>
+
+    <!-- Ações -->
+    <div class="form-actions col-2">
+      <button type="submit" class="btn btn-primary">Gerar PDF</button>
+      <button type="reset" class="btn btn-ghost">Limpar</button>
+      <div id="statusCert" class="status" aria-live="polite"></div>
+    </div>
   </form>
+</section>
+
+<style>
+  /* ====== Card base ====== */
+  .card { background:#fff; border:1px solid #e6e6e6; border-radius:18px; box-shadow:0 4px 18px rgba(0,0,0,.06); }
+  .card__header{ padding:18px 20px 0; }
+  .card__title h2{ margin:0; font-size:1.25rem }
+  .card__title p{ margin:.25rem 0 1rem; color:#666 }
+
+  /* ====== Form grid ====== */
+  .form-grid{ padding:16px 20px 20px; display:grid; grid-template-columns:1fr; gap:14px }
+  .col-2{ grid-column:span 1 }
+  @media (min-width: 860px){
+    .form-grid{ grid-template-columns:1fr 1fr }
+    .col-2{ grid-column:span 2 }
+  }
+  .form-group{ display:flex; flex-direction:column; gap:6px }
+  label span{ color:#c0392b }
+  input[type="text"], input[type="date"], input[type="number"], input[type="color"], select, textarea{
+    padding:10px 12px; border:1px solid #d9d9d9; border-radius:12px; font:inherit; outline:none;
+  }
+  input:focus, select:focus, textarea:focus{ border-color:#2e7d32; box-shadow:0 0 0 3px rgba(46,125,50,.15) }
+  .inline{ display:flex; align-items:center; gap:8px }
+  .sep{ color:#777 }
+  .hint{ color:#888; font-size:.85rem }
+  .checkbox{ display:flex; gap:8px; align-items:center; user-select:none }
+
+  /* ====== Buttons ====== */
+  .form-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+  .btn{ padding:10px 14px; border-radius:12px; border:1px solid transparent; cursor:pointer }
+  .btn-primary{ background:#2e7d32; color:#fff }
+  .btn-primary:hover{ filter:brightness(.95) }
+  .btn-ghost{ background:#f6f6f6; color:#333; border-color:#e6e6e6 }
+  .status{ margin-left:auto; color:#555; font-size:.9rem }
+
+  /* ====== Cert section spacing ====== */
+  .card-cert{ margin-top:16px }
+</style>
+
+<script>
+  // ==================== CONFIG BASE (reaproveite a sua, se já tiver) ====================
+  const API_BASE =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://127.0.0.1:8000"
+      : "https://helptech-antunes-git-main-alisons-projects-f41ebd8c.vercel.app";
+
+  async function downloadBlob(url, options, filename = "certificado.pdf") {
+    const res = await fetch(url, options);
+    if (!res.ok) throw new Error(`Erro ${res.status}`);
+    const blob = await res.blob();
+    const fileUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = fileUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(fileUrl), 2000);
+  }
+
+  // ==================== SUBMIT ====================
+  const formCert = document.getElementById("formCertificado");
+  const statusCert = document.getElementById("statusCert");
+
+  formCert.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusCert.textContent = "Gerando PDF...";
+
+    // validações simples
+    const nome = formCert.nome.value.trim();
+    const curso = formCert.curso.value.trim();
+    if (!nome || !curso) {
+      statusCert.textContent = "Preencha os campos obrigatórios.";
+      return;
+    }
+    const data_inicio = formCert.data_inicio.value || null;
+    const data_fim = formCert.data_fim.value || null;
+    if (data_inicio && data_fim && data_inicio > data_fim) {
+      statusCert.textContent = "Período inválido: início depois do fim.";
+      return;
+    }
+
+    const payload = {
+      nome,
+      curso,
+      carga_horaria: formCert.carga.value ? Number(formCert.carga.value) : null,
+      data_inicio,
+      data_fim,
+      data_conclusao: formCert.data_conclusao.value || null,
+      instrutor: formCert.instrutor.value.trim() || null,
+      local: formCert.local.value.trim() || null,
+      assinatura: formCert.assinatura.value.trim() || null,
+      template: formCert.template.value,
+      cor_tema: formCert.cor_tema.value,
+      incluir_qr: formCert.incluir_qr.checked,
+      observacoes: formCert.observacoes.value.trim() || null
+    };
+
+    try {
+      // Ajuste o endpoint conforme seu backend (ex.: /certificado ou /pdf/certificado)
+      const url = `${API_BASE}/certificado`;
+      await downloadBlob(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }, `certificado_${nome.replace(/\s+/g,"_")}.pdf`);
+      statusCert.textContent = "PDF gerado com sucesso.";
+    } catch (err) {
+      console.error(err);
+      statusCert.textContent = "Falha ao gerar certificado.";
+      alert("Erro ao gerar certificado: " + err.message);
+    }
+  });
+</script>
+
 
   <script>
     // ==================== CONFIG BASE ====================
-    const API_BASE =
-      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-        ? "http://127.0.0.1:8000"
-        : "https://helptech-antunes-git-main-alisons-projects-f41ebd8c.vercel.app";
+    // Reuse API_BASE defined in the previous script block to avoid redeclaration.
 
     // ==================== FUNÇÃO DOWNLOAD ====================
     async function download(url, filename = "arquivo.pdf") {
