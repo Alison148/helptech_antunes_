@@ -30,7 +30,6 @@ const formOrc = document.querySelector("#formOrc");
 if (formOrc) {
   formOrc.onsubmit = async (ev) => {
     ev.preventDefault();
-    // coleta múltiplos serviços e valores (caso existam vários inputs)
     const cliente = formOrc.querySelector("[name='cliente']").value;
     const servicos = Array.from(formOrc.querySelectorAll("[name='servicos']"))
       .map((el) => el.value)
@@ -39,7 +38,6 @@ if (formOrc) {
       .map((el) => parseFloat(el.value || 0))
       .filter((v) => !isNaN(v));
 
-    // envia via POST JSON
     const body = {
       cliente,
       itens: servicos.map((s, i) => ({ descricao: s, valor: valores[i] || 0 })),
@@ -123,5 +121,24 @@ if (formCarta) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     }, "carta.pdf");
+  };
+}
+
+// ==================== FORM CERTIFICADO ====================
+const formCertificado = document.querySelector("#formCertificado");
+if (formCertificado) {
+  formCertificado.onsubmit = async (ev) => {
+    ev.preventDefault();
+    const nome = formCertificado.querySelector("[name='nome']").value;
+    const curso = formCertificado.querySelector("[name='curso']").value;
+    const data = formCertificado.querySelector("[name='data']").value;
+
+    const body = { nome, curso, data };
+
+    await downloadBlob(`${API_BASE}/certificado`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }, "certificado.pdf");
   };
 }

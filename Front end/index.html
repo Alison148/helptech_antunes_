@@ -7,7 +7,7 @@
     body { font-family: Arial, sans-serif; margin: 20px; }
     form { margin-bottom: 30px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; }
     label { display: block; margin-top: 8px; }
-    input { padding: 6px; margin-top: 3px; width: 250px; }
+    input, textarea { padding: 6px; margin-top: 3px; width: 250px; }
     button { margin-top: 12px; padding: 8px 16px; background: #008f39; color: white; border: none; border-radius: 6px; cursor: pointer; }
     button:hover { background: #006f2c; }
     h2 { color: #008f39; }
@@ -28,12 +28,12 @@
 
   <!-- FORM NOTA FISCAL -->
   <form id="formNF">
-    <h2>Nota Fiscal </h2>     
+    <h2>Nota Fiscal</h2>
     <label>Número: <input type="text" name="numero" required></label>
     <label>Cliente: <input type="text" name="cliente" required></label>
     <label>Serviço: <input type="text" name="servico" required></label>
     <label>Valor: <input type="number" step="0.01" name="valor" required></label>
-    <button type="submit">Gerar NF</button>
+    <button type="submit">Gerar Nota Fiscal</button>
   </form>
 
   <!-- FORM CONTRATO -->
@@ -56,10 +56,88 @@
   <form id="formCarta">
     <h2>Carta</h2>
     <label>Destinatário: <input type="text" name="destinatario" required></label>
-    <label>Mensagem: <input type="text" name="mensagem" required></label>
+    <label>Mensagem: <textarea name="mensagem" rows="3" required></textarea></label>
     <button type="submit">Gerar Carta</button>
   </form>
 
-  <script src="app.js"></script>
+  <!-- FORM CERTIFICADO -->
+  <form id="formCertificado">
+    <h2>Certificado</h2>
+    <label>Nome do Participante: <input type="text" name="nome" required></label>
+    <label>Curso/Evento: <input type="text" name="curso" required></label>
+    <label>Data de Conclusão: <input type="date" name="data" required></label>
+    <button type="submit">Gerar Certificado</button>
+  </form>
+
+  <script>
+    // ==================== CONFIG BASE ====================
+    const API_BASE =
+      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+        ? "http://127.0.0.1:8000"
+        : "https://helptech-antunes-git-main-alisons-projects-f41ebd8c.vercel.app";
+
+    // ==================== FUNÇÃO DOWNLOAD ====================
+    async function download(url, filename = "arquivo.pdf") {
+      try {
+        const res = await fetch(url, { mode: "cors" });
+        if (!res.ok) throw new Error(`Erro ${res.status}`);
+        const blob = await res.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      } catch (err) {
+        alert("Erro ao gerar PDF: " + err.message);
+      }
+    }
+
+    // ==================== FORM ORÇAMENTO ====================
+    document.getElementById("formOrc").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(e.target));
+      await download(`${API_BASE}/gerar-pdf?${params.toString()}`, "orcamento.pdf");
+    });
+
+    // ==================== FORM NOTA FISCAL ====================
+    document.getElementById("formNF").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(e.target));
+      await download(`${API_BASE}/nota-fiscal?${params.toString()}`, "nota_fiscal.pdf");
+    });
+
+    // ==================== FORM CONTRATO ====================
+    document.getElementById("formContrato").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(e.target));
+      await download(`${API_BASE}/contrato?${params.toString()}`, "contrato.pdf");
+    });
+
+    // ==================== FORM RECIBO ====================
+    document.getElementById("formRecibo").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(e.target));
+      await download(`${API_BASE}/recibo?${params.toString()}`, "recibo.pdf");
+    });
+
+    // ==================== FORM CARTA ====================
+    document.getElementById("formCarta").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const params = new URLSearchParams(new FormData(e.target));
+      await download(`${API_BASE}/carta?${params.toString()}`, "carta.pdf");
+    });
+
+    // ==================== FORM CERTIFICADO ====================
+    document.getElementById("formCertificado").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nome = e.target.nome.value;
+      const curso = e.target.curso.value;
+      const data = e.target.data.value;
+      const url = `${API_BASE}/certificado?nome=${encodeURIComponent(nome)}&curso=${encodeURIComponent(curso)}&data=${encodeURIComponent(data)}`;
+      await download(url, "certificado.pdf");
+    });
+  </script>
+
+    <script src="app.js"></script>
 </body>
 </html>
