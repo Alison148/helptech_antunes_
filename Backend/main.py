@@ -222,14 +222,14 @@ def draw_nota(c, numero: str, cliente: str, pares: List[tuple], data_str: Option
     y -= 12
 
     c.setFont("Helvetica-Bold", 8)
-    c.drawString(x_margin, y, f"Extrato No. {numero} do CUPOM FISCAL ELETRÔNICO - SAT")
+    c.drawString(x_margin, y, f"Extrato No. {numero} do CUPOM FISCAL ELETRÔNICO ")
     y -= 10
     c.line(x_margin, y, largura - x_margin, y)
     y -= 10
 
     # Itens
     c.setFont("Helvetica-Bold", 8)
-    c.drawString(x_margin, y, "#  DESC")
+    c.drawString(x_margin, y, "  DESC")
     c.drawRightString(largura - x_margin, y, "VL ITEM R$")
     y -= 9
     c.line(x_margin, y, largura - x_margin, y)
@@ -272,11 +272,9 @@ def draw_nota(c, numero: str, cliente: str, pares: List[tuple], data_str: Option
     y -= 9
     c.drawString(x_margin, y, "Conforme Lei Fed. 12.741/2012 – Fonte IBPT")
     y -= 12
-
-    # Código de barras
-    barcode = code128.Code128(numero[:15], barHeight=8 * mm, barWidth=0.35)
-    barcode.drawOn(c, x_margin, y - 8)
-    y -= 16
+    if data_str:
+        c.drawString(x_margin, y, f"Data/Hora: {data_str}")
+        y -= 12         
 
     # QR Code
     qr_data = f"NF {numero} - Cliente: {cliente} - Total: R$ {total:.2f}"
