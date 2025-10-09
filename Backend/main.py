@@ -122,9 +122,34 @@ def gerar_carta_get(destinatario: str = "Destinatário", mensagem: str = "Mensag
     return stream_pdf(pdf, "carta.pdf")
 
 @app.get("/certificado")
-def gerar_certificado_get(nome: str = "Nome do Aluno", curso: str = "Curso Exemplo"):
-    pdf = pdf_bytes(lambda c: draw_certificado(c, nome, curso))
-    return stream_pdf(pdf, "certificado.pdf")
+def gerar_certificado_get(
+    nome: str = "Nome do Aluno",
+    curso: str = "Curso Exemplo",
+    carga_horaria: int = 20,
+    periodo: str = "01/01/2025 a 10/01/2025",
+    local: str = "Jundiaí-SP",
+    instrutor: str = "Instrutor Exemplo",
+    assinatura: str = "CIJUN JUNDIAÍ"
+):
+    """
+    Gera um certificado de exemplo via URL.
+    Exemplo de uso:
+      /certificado?nome=Alison&curso=IA&carga_horaria=20
+    """
+
+    pdf_content = pdf_bytes(lambda c: draw_certificado(
+        c,
+        nome=nome,
+        curso=curso,
+        carga_horaria=carga_horaria,
+        periodo=periodo,
+        local=local,
+        instrutor=instrutor,
+        assinatura=assinatura
+    ))
+
+    filename = f"certificado_{nome.lower().replace(' ', '_')}.pdf"
+    return stream_pdf(pdf_content, filename)
 
 
 # ========= POST =========
@@ -163,9 +188,19 @@ def gerar_carta_post(body: CartaBody):
 
 @app.post("/certificado")
 def gerar_certificado_post(body: CertificadoBody):
-    pdf = pdf_bytes(lambda c: draw_certificado(c, body.nome, body.curso))
-    return stream_pdf(pdf, "certificado.pdf")
+    """Gera o certificado em PDF com base nos dados enviados pelo frontend."""
+    pdf_content = pdf_bytes(lambda c: draw_certificado(
+        c,
+        nome=body.nome,
+        curso=body.curso,
+        carga_horaria=body.carga_horaria,
+        periodo=body.periodo,
+        local=body.local,
+        instrutor=body.instrutor,
+        assinatura=body.assinatura
+    ))
 
+    return stream_pdf(pdf_content, f"certificado_{body.nome.lower().replace(' ', '_')}.pdf")
 
 # ========= Desenhos =========
 def draw_header(c, titulo: str):
@@ -316,8 +351,59 @@ def draw_carta(c, destinatario: str, mensagem: str):
         text.textLine(line)
     c.drawText(text)
 
-def draw_certificado(c, nome: str, curso: str):
-    draw_header(c, "Certificado de Conclusão")
-    c.setFont("Helvetica", 14)
-    c.drawString(70, 760, f"Certificamos que {nome}")
-    c.drawString(70, 740, f"concluiu o curso: {curso}")
+def draw_certificado(c, nome: str, curso: str, carga_horaria: int, periodo: str, local: str, instrutor: str, assinatura: str):
+    # Fundo
+    largura, altura = A4
+    c.setFillColorRGB(0.96, 0.96, 0.96)
+    c.rect(0, 0, largura, altura, fill=True, stroke=False)
+
+    # Moldura decorativa
+    c.setStrokeColorRGB(0.2, 0.5, 0.3)
+    c.setLineWidth(5)
+    c.rect(20, 20, largura - 40, altura - 40)
+
+    # Título
+    c.setFont("Helvetica-Bold", 28)
+    c.setFillColorRGB(0.15, 0.4, 0.15)
+    c.drawCentredString(largura / 2, altura - 100, "CERTIFICADO DE CONCLUSÃO")
+
+    # Texto principal
+    c.setFont("Helvetica", 13)
+    c.setFillColor(colors.black)
+    texto = (
+        f"Certificamos que {nome}, concluiu com êxito o curso/evento '{curso}', "
+        f"com carga horária total de {carga_horaria} horas, "
+        f"realizado no período de {periodo}, na cidade de {local}."
+    )
+    text_obj = c.beginText(70, altura - 200)
+    text_obj.setFont("Helvetica", 13)
+    text_obj.setLeading(18)
+    text_obj.textLines(texto)
+    c.drawText(text_obj)
+
+    # Assinatura e responsável
+    c.setFont("Helvetica-Bold", 12)
+    c.drawCentredString(largura / 2, 120, assinatura)
+    c.setFont("Helvetica", 11)
+    c.drawCentredString(largura / 2, 105, f"Instrutor(a): {instrutor}")
+
+    # Rodapé institucional
+    c.setFont("Helvetica-Oblique", 9)
+    c.setFillColorRGB(0.4, 0.4, 0.4)
+    c.drawCentredString(largura / 2, 50, "Emitido por CIJUN JUNDIAÍ • Sistema HelpTech Antunes © 2025")
+
+    # Destaque nome (decorativo)
+    c.setFont("Helvetica-Bold", 18)
+    c.setFillColorRGB(0.1, 0.3, 0.1)
+    c.drawCentredString(largura / 2, altura - 150, nome.upper())
+
+    # QR Code (exemplo - opcional)
+    from reportlab.graphics.barcode import qr
+    from reportlab.graphics import renderPDF
+    from reportlab.graphics.shapes import Drawing
+    q = qr.QrCodeWidget(f"Verificado: {nome} | {curso}")
+    bounds = q.getBounds()
+    w, h = bounds[2] - bounds[0], bounds[3] - bounds[1]
+    d = Drawing(50, 50, transform=[50 / w, 0, 0, 50 / h, 0, 0])
+    d.add(q)
+    renderPDF.draw(d, c, largura - 90, 60)
